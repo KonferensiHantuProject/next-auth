@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const RegisterForm = () => {
 
@@ -9,6 +10,9 @@ const RegisterForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    // Router
+    const router = useRouter();
 
     // Handling Submit
     const handleSubmit = async (e) => {
@@ -23,6 +27,27 @@ const RegisterForm = () => {
 
         // Try
         try{
+
+            // Find User
+            const find = await fetch('api/userExist', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email
+                })
+            });
+
+            // Double One
+            const user = await find.json();
+
+            // Checking Double User Or No
+            if (user){
+                setError("User Sudah ada");
+                return
+            }
+
             const res = await fetch('api/register', {
                 method: "POST",
                 headers: {
@@ -37,6 +62,7 @@ const RegisterForm = () => {
             if(res.ok) {
                 const form = e.target;
                 form.reset();
+                router.push("/")
             }else{
                 console.log(res)
             }
