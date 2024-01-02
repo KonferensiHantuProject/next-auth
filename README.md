@@ -1,5 +1,5 @@
 # Next Auth
-A simple example of Authorization in Next JS using next-auth
+A simple example of authorization in Next JS using next-auth
 
 <br>
 
